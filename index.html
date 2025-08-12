@@ -1,763 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cute Cat Calendar 2025-2026</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kitten Calendar — 18.08.2025 → 18.08.2026</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-  body {
-    margin:0; padding:0; background: #fff;
-    font-family: 'Poppins', sans-serif;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    min-height: 100vh;
-    user-select: none;
-    background-color: #f8f4f0; /* Your background image can go here */
+  :root{
+    --kitten-1: #ffdbea;
+    --kitten-2: #fff3f8;
+    --kitten-3: #f7d6e6;
+    --accent: #d86a9a;
+    --muted: #9b6b86;
+    --card-bg: rgba(255,255,255,0.9);
+    --radius: 18px;
+    --shadow: 0 12px 30px rgba(45,25,45,0.12);
   }
-  .calendar-container {
-    background: #fff1f9;
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    padding: 25px;
-    max-width: 950px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+  body{
+    margin:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+    background-color: #fff7fb;
+    padding:32px;
   }
-  .header {
-    display: flex; justify-content: space-between; align-items: center;
-    width: 100%;
-    margin-bottom: 15px;
+
+  .wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+    max-width:1080px;
+    width:100%;
   }
-  .header button {
-    background: #ff80ab;
-    border: none;
-    color: white;
-    font-weight: 600;
-    font-size: 18px;
-    padding: 8px 18px;
+
+  .calendar-card{
+    width:420px;
+    max-width:90vw;
+    background: linear-gradient(180deg,var(--kitten-2),var(--kitten-3));
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+    perspective:1300px;
+  }
+
+  .cal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .cal-title{
+    font-size:1.25rem;
+    color:var(--muted);
+    font-weight:600;
+    text-align:center;
+    flex:1;
+  }
+  .btn {
+    background:var(--card-bg);
+    border:none;
+    padding:8px 10px;
+    border-radius:10px;
+    cursor:pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: transform .18s ease, background .18s;
+  }
+  .btn:active{ transform:scale(.98) }
+  .btn:disabled{ opacity:.45; cursor:not-allowed }
+
+  .flip-wrap {
+    width:100%;
+    position:relative;
+    height: 380px;
+  }
+  .panel {
+    width:100%;
+    height:100%;
+    position:absolute;
+    left:0; top:0;
     border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 3px 8px #ff80abaa;
-    transition: background-color 0.3s;
+    backface-visibility:hidden;
+    transform-style:preserve-3d;
+    overflow:hidden;
   }
-  .header button:hover {
-    background: #ff4d87;
+  .panel.front{
+    background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,240,249,0.7));
+    z-index:2;
   }
-  .month-label {
-    font-size: 26px;
-    font-weight: 700;
-    color: #d81b60;
-    user-select: none;
+  .panel.back{
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(245,235,241,0.9));
+    transform: rotateY(-180deg);
   }
-  .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    width: 100%;
-    text-align: center;
-    font-weight: 600;
-    color: #d81b60;
-    margin-bottom: 8px;
-    user-select: none;
+
+  .weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+    padding:10px;
+    font-size:0.8rem;
+    color:var(--muted);
+    justify-items:center;
   }
-  .weekdays div {
-    padding: 8px 0;
+
+  .days-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:8px;
+    padding:10px;
+    padding-top:6px;
   }
-  .days-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-    width: 100%;
-  }
+
   .day {
-    background: #ffd9ec;
-    border-radius: 14px;
-    padding: 10px 5px 5px 5px;
-    text-align: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 5px #ffa1c8aa;
+    min-height:64px;
+    border-radius:10px;
+    background:var(--card-bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    transition: transform .28s cubic-bezier(.2,.9,.25,1), box-shadow .28s;
+    cursor:pointer;
   }
-  .day.disabled {
-    background: #ffe3f2aa;
-    color: #aaa;
-    cursor: default;
-    box-shadow: none;
+  .day.disabled{
+    opacity:.35;
+    pointer-events:none;
+    background:linear-gradient(180deg,#fff8fb,#fff2f7);
   }
-  .day:hover:not(.disabled) {
+  .day:not(.disabled):hover{
     transform: scale(1.3);
-    z-index: 10;
-    box-shadow: 0 10px 30px #ff7ca9bb;
+    z-index:40;
+    box-shadow: 0 18px 40px rgba(30,10,30,0.18);
   }
-  .day-number {
-    font-weight: 700;
-    color: #d81b60;
-    margin-bottom: 6px;
-    user-select: none;
+  .day .date-num{
+    font-weight:600;
+    color:#6d3550;
+    z-index:2;
   }
-  .day-image {
-    width: 100%;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 10px;
-    user-select: none;
+  .day .thumb{
+    position:absolute;
+    bottom:6px;
+    left:50%;
+    transform:translateX(-50%);
+    width:84px;
+    height:64px;
+    object-fit:cover;
+    border-radius:8px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    display:none;
+    z-index:3;
   }
-  .day-popup {
-    pointer-events: none;
-    position: absolute;
-    top: -140px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 180px;
-    background: #ffd0e6;
-    border-radius: 16px;
-    padding: 10px;
-    box-shadow: 0 8px 20px #ff79b0cc;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 15;
+  .day:not(.disabled):hover .thumb{ display:block; }
+  .day .overlay {
+    position:absolute;
+    top:-20px;
+    left:50%;
+    transform:translateX(-50%);
+    background: linear-gradient(90deg,#fff0f7,#ffeaf4);
+    padding:4px 8px;
+    border-radius:8px;
+    font-size:0.72rem;
+    color:var(--accent);
+    box-shadow:0 6px 14px rgba(0,0,0,0.08);
+    display:none;
+    z-index:4;
+    white-space:nowrap;
   }
-  .day:hover .day-popup {
-    pointer-events: auto;
-    opacity: 1;
+  .day:not(.disabled):hover .overlay{ display:block; }
+
+  .paw {
+    position:absolute;
+    right:8px;
+    bottom:6px;
+    width:28px;
+    height:28px;
+    opacity:0.15;
+    transition: transform .25s ease, opacity .25s;
   }
-  .day-popup img {
-    width: 100%;
-    height: 110px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 8px;
+  .day:not(.disabled):hover .paw{ transform: translateY(-6px); opacity:0.45; }
+
+  .random-card{
+    margin-top:6px;
+    background: linear-gradient(180deg,#fff,#fff7fb);
+    border-radius:12px;
+    padding:12px;
+    width:420px;
+    max-width:90vw;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
   }
-  .day-popup .popup-text {
-    font-weight: 600;
-    color: #a3125a;
-    font-size: 14px;
-    text-align: center;
-    user-select: none;
+  .rand-display{
+    min-width:160px;
+    padding:8px 10px;
+    border-radius:10px;
+    background:linear-gradient(180deg,#fff7fb,#fff0f6);
+    color:var(--muted);
+    font-weight:600;
+    text-align:center;
   }
-  /* Flip animation for month switching */
-  .calendar-container.flip {
-    animation: flipAnimation 0.7s forwards;
+  .rand-btn{
+    background:var(--accent);
+    color:white;
+    padding:8px 12px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    font-weight:700;
+    box-shadow:0 8px 18px rgba(216,106,154,0.18);
   }
-  @keyframes flipAnimation {
-    0% { transform: rotateY(0deg); }
-    50% { transform: rotateY(90deg); }
-    100% { transform: rotateY(0deg); }
-  }
-  /* Cute Word Machine styles */
-  .word-machine {
-    margin-top: 30px;
-    background: #fff0f7;
-    border-radius: 15px;
-    padding: 15px 25px;
-    box-shadow: 0 6px 15px #ff80abcc;
-    max-width: 300px;
-    width: 100%;
-    text-align: center;
-  }
-  .word-machine button {
-    background: #d81b60;
-    color: white;
-    font-weight: 700;
-    font-size: 16px;
-    border: none;
-    padding: 10px 22px;
-    border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px #d81b60cc;
-    transition: background-color 0.3s ease;
-  }
-  .word-machine button:hover {
-    background: #a3125a;
-  }
-  .word-output {
-    margin-top: 15px;
-    font-weight: 600;
-    color: #d81b60;
-    font-size: 18px;
-    min-height: 24px;
-    user-select: none;
-  }
+  .rand-btn:disabled{ opacity:.5; cursor:not-allowed }
+  .small-note{ font-size:0.76rem; color:#6f475f; opacity:.9 }
 </style>
 </head>
 <body>
 
-<div class="calendar-container" id="calendar">
-  <div class="header">
-    <button id="prev-month" aria-label="Previous month">&lt;</button>
-    <div class="month-label" id="month-label"></div>
-    <button id="next-month" aria-label="Next month">&gt;</button>
+<div class="wrap">
+  <div class="calendar-card" id="calendarCard">
+    <div class="cal-header">
+      <button class="btn" id="prevBtn" title="Previous month">&lt;</button>
+      <div class="cal-title" id="monthYear">—</div>
+      <button class="btn" id="nextBtn" title="Next month">&gt;</button>
+    </div>
+    <div class="flip-wrap">
+      <div class="panel front" id="panelFront">
+        <div class="weekdays" id="wdaysFront"></div>
+        <div class="days-grid" id="daysFront"></div>
+      </div>
+      <div class="panel back" id="panelBack">
+        <div class="weekdays" id="wdaysBack"></div>
+        <div class="days-grid" id="daysBack"></div>
+      </div>
+    </div>
   </div>
-  <div class="weekdays" aria-label="Weekday names">
-    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-  </div>
-  <div class="days-grid" id="days-grid" aria-label="Days of the month"></div>
-</div>
 
-<div class="word-machine" role="region" aria-live="polite" aria-label="Daily cute word machine">
-  <button id="cute-word-btn">Your Daily Cute Word</button>
-  <div class="word-output" id="word-output" aria-live="assertive"></div>
+  <div class="random-card">
+    <div>
+      <div class="small-note">Daily cuteness</div>
+      <div class="rand-display" id="randWord">—</div>
+    </div>
+    <div>
+      <button class="rand-btn" id="randBtn">your daily cute word</button>
+      <div style="font-size:.72rem; color:#7a4f6b; margin-top:6px; text-align:right;">
+        limit: once per day
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-/* ========== Your day-specific images: 
-   Keys are dates 'YYYY-MM-DD'
-   Values are image file names or paths relative to this file.
-   Place your images in the same folder or adjust the paths accordingly.
-   Example: '2025-08-18': 'cute-cat-1.jpg'
-   ================================================================== */
-const dayImages = {
-const dayImages = {
-  "2025-08-18": "Zrzut ekranu 2024-08-17 235353.png",
-  "2025-08-19": "placeholder.jpg",
-  "2025-08-20": "placeholder.jpg",
-  "2025-08-21": "placeholder.jpg",
-  "2025-08-22": "placeholder.jpg",
-  "2025-08-23": "placeholder.jpg",
-  "2025-08-24": "placeholder.jpg",
-  "2025-08-25": "placeholder.jpg",
-  "2025-08-26": "placeholder.jpg",
-  "2025-08-27": "placeholder.jpg",
-  "2025-08-28": "placeholder.jpg",
-  "2025-08-29": "placeholder.jpg",
-  "2025-08-30": "placeholder.jpg",
-  "2025-08-31": "placeholder.jpg",
-  "2025-09-01": "placeholder.jpg",
-  "2025-09-02": "placeholder.jpg",
-  "2025-09-03": "placeholder.jpg",
-  "2025-09-04": "placeholder.jpg",
-  "2025-09-05": "placeholder.jpg",
-  "2025-09-06": "placeholder.jpg",
-  "2025-09-07": "placeholder.jpg",
-  "2025-09-08": "placeholder.jpg",
-  "2025-09-09": "placeholder.jpg",
-  "2025-09-10": "placeholder.jpg",
-  "2025-09-11": "placeholder.jpg",
-  "2025-09-12": "placeholder.jpg",
-  "2025-09-13": "placeholder.jpg",
-  "2025-09-14": "placeholder.jpg",
-  "2025-09-15": "placeholder.jpg",
-  "2025-09-16": "placeholder.jpg",
-  "2025-09-17": "placeholder.jpg",
-  "2025-09-18": "placeholder.jpg",
-  "2025-09-19": "placeholder.jpg",
-  "2025-09-20": "placeholder.jpg",
-  "2025-09-21": "placeholder.jpg",
-  "2025-09-22": "placeholder.jpg",
-  "2025-09-23": "placeholder.jpg",
-  "2025-09-24": "placeholder.jpg",
-  "2025-09-25": "placeholder.jpg",
-  "2025-09-26": "placeholder.jpg",
-  "2025-09-27": "placeholder.jpg",
-  "2025-09-28": "placeholder.jpg",
-  "2025-09-29": "placeholder.jpg",
-  "2025-09-30": "placeholder.jpg",
-  "2025-10-01": "placeholder.jpg",
-  "2025-10-02": "placeholder.jpg",
-  "2025-10-03": "placeholder.jpg",
-  "2025-10-04": "placeholder.jpg",
-  "2025-10-05": "placeholder.jpg",
-  "2025-10-06": "placeholder.jpg",
-  "2025-10-07": "placeholder.jpg",
-  "2025-10-08": "placeholder.jpg",
-  "2025-10-09": "placeholder.jpg",
-  "2025-10-10": "placeholder.jpg",
-  "2025-10-11": "placeholder.jpg",
-  "2025-10-12": "placeholder.jpg",
-  "2025-10-13": "placeholder.jpg",
-  "2025-10-14": "placeholder.jpg",
-  "2025-10-15": "placeholder.jpg",
-  "2025-10-16": "placeholder.jpg",
-  "2025-10-17": "placeholder.jpg",
-  "2025-10-18": "placeholder.jpg",
-  "2025-10-19": "placeholder.jpg",
-  "2025-10-20": "placeholder.jpg",
-  "2025-10-21": "placeholder.jpg",
-  "2025-10-22": "placeholder.jpg",
-  "2025-10-23": "placeholder.jpg",
-  "2025-10-24": "placeholder.jpg",
-  "2025-10-25": "placeholder.jpg",
-  "2025-10-26": "placeholder.jpg",
-  "2025-10-27": "placeholder.jpg",
-  "2025-10-28": "placeholder.jpg",
-  "2025-10-29": "placeholder.jpg",
-  "2025-10-30": "placeholder.jpg",
-  "2025-10-31": "placeholder.jpg",
-  "2025-11-01": "placeholder.jpg",
-  "2025-11-02": "placeholder.jpg",
-  "2025-11-03": "placeholder.jpg",
-  "2025-11-04": "placeholder.jpg",
-  "2025-11-05": "placeholder.jpg",
-  "2025-11-06": "placeholder.jpg",
-  "2025-11-07": "placeholder.jpg",
-  "2025-11-08": "placeholder.jpg",
-  "2025-11-09": "placeholder.jpg",
-  "2025-11-10": "placeholder.jpg",
-  "2025-11-11": "placeholder.jpg",
-  "2025-11-12": "placeholder.jpg",
-  "2025-11-13": "placeholder.jpg",
-  "2025-11-14": "placeholder.jpg",
-  "2025-11-15": "placeholder.jpg",
-  "2025-11-16": "placeholder.jpg",
-  "2025-11-17": "placeholder.jpg",
-  "2025-11-18": "placeholder.jpg",
-  "2025-11-19": "placeholder.jpg",
-  "2025-11-20": "placeholder.jpg",
-  "2025-11-21": "placeholder.jpg",
-  "2025-11-22": "placeholder.jpg",
-  "2025-11-23": "placeholder.jpg",
-  "2025-11-24": "placeholder.jpg",
-  "2025-11-25": "placeholder.jpg",
-  "2025-11-26": "placeholder.jpg",
-  "2025-11-27": "placeholder.jpg",
-  "2025-11-28": "placeholder.jpg",
-  "2025-11-29": "placeholder.jpg",
-  "2025-11-30": "placeholder.jpg",
-  "2025-12-01": "placeholder.jpg",
-  "2025-12-02": "placeholder.jpg",
-  "2025-12-03": "placeholder.jpg",
-  "2025-12-04": "placeholder.jpg",
-  "2025-12-05": "placeholder.jpg",
-  "2025-12-06": "placeholder.jpg",
-  "2025-12-07": "placeholder.jpg",
-  "2025-12-08": "placeholder.jpg",
-  "2025-12-09": "placeholder.jpg",
-  "2025-12-10": "placeholder.jpg",
-  "2025-12-11": "placeholder.jpg",
-  "2025-12-12": "placeholder.jpg",
-  "2025-12-13": "placeholder.jpg",
-  "2025-12-14": "placeholder.jpg",
-  "2025-12-15": "placeholder.jpg",
-  "2025-12-16": "placeholder.jpg",
-  "2025-12-17": "placeholder.jpg",
-  "2025-12-18": "placeholder.jpg",
-  "2025-12-19": "placeholder.jpg",
-  "2025-12-20": "placeholder.jpg",
-  "2025-12-21": "placeholder.jpg",
-  "2025-12-22": "placeholder.jpg",
-  "2025-12-23": "placeholder.jpg",
-  "2025-12-24": "placeholder.jpg",
-  "2025-12-25": "placeholder.jpg",
-  "2025-12-26": "placeholder.jpg",
-  "2025-12-27": "placeholder.jpg",
-  "2025-12-28": "placeholder.jpg",
-  "2025-12-29": "placeholder.jpg",
-  "2025-12-30": "placeholder.jpg",
-  "2025-12-31": "placeholder.jpg",
-  "2026-01-01": "placeholder.jpg",
-  "2026-01-02": "placeholder.jpg",
-  "2026-01-03": "placeholder.jpg",
-  "2026-01-04": "placeholder.jpg",
-  "2026-01-05": "placeholder.jpg",
-  "2026-01-06": "placeholder.jpg",
-  "2026-01-07": "placeholder.jpg",
-  "2026-01-08": "placeholder.jpg",
-  "2026-01-09": "placeholder.jpg",
-  "2026-01-10": "placeholder.jpg",
-  "2026-01-11": "placeholder.jpg",
-  "2026-01-12": "placeholder.jpg",
-  "2026-01-13": "placeholder.jpg",
-  "2026-01-14": "placeholder.jpg",
-  "2026-01-15": "placeholder.jpg",
-  "2026-01-16": "placeholder.jpg",
-  "2026-01-17": "placeholder.jpg",
-  "2026-01-18": "placeholder.jpg",
-  "2026-01-19": "placeholder.jpg",
-  "2026-01-20": "placeholder.jpg",
-  "2026-01-21": "placeholder.jpg",
-  "2026-01-22": "placeholder.jpg",
-  "2026-01-23": "placeholder.jpg",
-  "2026-01-24": "placeholder.jpg",
-  "2026-01-25": "placeholder.jpg",
-  "2026-01-26": "placeholder.jpg",
-  "2026-01-27": "placeholder.jpg",
-  "2026-01-28": "placeholder.jpg",
-  "2026-01-29": "placeholder.jpg",
-  "2026-01-30": "placeholder.jpg",
-  "2026-01-31": "placeholder.jpg",
-  "2026-02-01": "placeholder.jpg",
-  "2026-02-02": "placeholder.jpg",
-  "2026-02-03": "placeholder.jpg",
-  "2026-02-04": "placeholder.jpg",
-  "2026-02-05": "placeholder.jpg",
-  "2026-02-06": "placeholder.jpg",
-  "2026-02-07": "placeholder.jpg",
-  "2026-02-08": "placeholder.jpg",
-  "2026-02-09": "placeholder.jpg",
-  "2026-02-10": "placeholder.jpg",
-  "2026-02-11": "placeholder.jpg",
-  "2026-02-12": "placeholder.jpg",
-  "2026-02-13": "placeholder.jpg",
-  "2026-02-14": "placeholder.jpg",
-  "2026-02-15": "placeholder.jpg",
-  "2026-02-16": "placeholder.jpg",
-  "2026-02-17": "placeholder.jpg",
-  "2026-02-18": "placeholder.jpg",
-  "2026-02-19": "placeholder.jpg",
-  "2026-02-20": "placeholder.jpg",
-  "2026-02-21": "placeholder.jpg",
-  "2026-02-22": "placeholder.jpg",
-  "2026-02-23": "placeholder.jpg",
-  "2026-02-24": "placeholder.jpg",
-  "2026-02-25": "placeholder.jpg",
-  "2026-02-26": "placeholder.jpg",
-  "2026-02-27": "placeholder.jpg",
-  "2026-02-28": "placeholder.jpg",
-  "2026-03-01": "placeholder.jpg",
-  "2026-03-02": "placeholder.jpg",
-  "2026-03-03": "placeholder.jpg",
-  "2026-03-04": "placeholder.jpg",
-  "2026-03-05": "placeholder.jpg",
-  "2026-03-06": "placeholder.jpg",
-  "2026-03-07": "placeholder.jpg",
-  "2026-03-08": "placeholder.jpg",
-  "2026-03-09": "placeholder.jpg",
-  "2026-03-10": "placeholder.jpg",
-  "2026-03-11": "placeholder.jpg",
-  "2026-03-12": "placeholder.jpg",
-  "2026-03-13": "placeholder.jpg",
-  "2026-03-14": "placeholder.jpg",
-  "2026-03-15": "placeholder.jpg",
-  "2026-03-16": "placeholder.jpg",
-  "2026-03-17": "placeholder.jpg",
-  "2026-03-18": "placeholder.jpg",
-  "2026-03-19": "placeholder.jpg",
-  "2026-03-20": "placeholder.jpg",
-  "2026-03-21": "placeholder.jpg",
-  "2026-03-22": "placeholder.jpg",
-  "2026-03-23": "placeholder.jpg",
-  "2026-03-24": "placeholder.jpg",
-  "2026-03-25": "placeholder.jpg",
-  "2026-03-26": "placeholder.jpg",
-  "2026-03-27": "placeholder.jpg",
-  "2026-03-28": "placeholder.jpg",
-  "2026-03-29": "placeholder.jpg",
-  "2026-03-30": "placeholder.jpg",
-  "2026-03-31": "placeholder.jpg",
-  "2026-04-01": "placeholder.jpg",
-  "2026-04-02": "placeholder.jpg",
-  "2026-04-03": "placeholder.jpg",
-  "2026-04-04": "placeholder.jpg",
-  "2026-04-05": "placeholder.jpg",
-  "2026-04-06": "placeholder.jpg",
-  "2026-04-07": "placeholder.jpg",
-  "2026-04-08": "placeholder.jpg",
-  "2026-04-09": "placeholder.jpg",
-  "2026-04-10": "placeholder.jpg",
-  "2026-04-11": "placeholder.jpg",
-  "2026-04-12": "placeholder.jpg",
-  "2026-04-13": "placeholder.jpg",
-  "2026-04-14": "placeholder.jpg",
-  "2026-04-15": "placeholder.jpg",
-  "2026-04-16": "placeholder.jpg",
-  "2026-04-17": "placeholder.jpg",
-  "2026-04-18": "placeholder.jpg",
-  "2026-04-19": "placeholder.jpg",
-  "2026-04-20": "placeholder.jpg",
-  "2026-04-21": "placeholder.jpg",
-  "2026-04-22": "placeholder.jpg",
-  "2026-04-23": "placeholder.jpg",
-  "2026-04-24": "placeholder.jpg",
-  "2026-04-25": "placeholder.jpg",
-  "2026-04-26": "placeholder.jpg",
-  "2026-04-27": "placeholder.jpg",
-  "2026-04-28": "placeholder.jpg",
-  "2026-04-29": "placeholder.jpg",
-  "2026-04-30": "placeholder.jpg",
-  "2026-05-01": "placeholder.jpg",
-  "2026-05-02": "placeholder.jpg",
-  "2026-05-03": "placeholder.jpg",
-  "2026-05-04": "placeholder.jpg",
-  "2026-05-05": "placeholder.jpg",
-  "2026-05-06": "placeholder.jpg",
-  "2026-05-07": "placeholder.jpg",
-  "2026-05-08": "placeholder.jpg",
-  "2026-05-09": "placeholder.jpg",
-  "2026-05-10": "placeholder.jpg",
-  "2026-05-11": "placeholder.jpg",
-  "2026-05-12": "placeholder.jpg",
-  "2026-05-13": "placeholder.jpg",
-  "2026-05-14": "placeholder.jpg",
-  "2026-05-15": "placeholder.jpg",
-  "2026-05-16": "placeholder.jpg",
-  "2026-05-17": "placeholder.jpg",
-  "2026-05-18": "placeholder.jpg",
-  "2026-05-19": "placeholder.jpg",
-  "2026-05-20": "placeholder.jpg",
-  "2026-05-21": "placeholder.jpg",
-  "2026-05-22": "placeholder.jpg",
-  "2026-05-23": "placeholder.jpg",
-  "2026-05-24": "placeholder.jpg",
-  "2026-05-25": "placeholder.jpg",
-  "2026-05-26": "placeholder.jpg",
-  "2026-05-27": "placeholder.jpg",
-  "2026-05-28": "placeholder.jpg",
-  "2026-05-29": "placeholder.jpg",
-  "2026-05-30": "placeholder.jpg",
-  "2026-05-31": "placeholder.jpg",
-  "2026-06-01": "placeholder.jpg",
-  "2026-06-02": "placeholder.jpg",
-  "2026-06-03": "placeholder.jpg",
-  "2026-06-04": "placeholder.jpg",
-  "2026-06-05": "placeholder.jpg",
-  "2026-06-06": "placeholder.jpg",
-  "2026-06-07": "placeholder.jpg",
-  "2026-06-08": "placeholder.jpg",
-  "2026-06-09": "placeholder.jpg",
-  "2026-06-10": "placeholder.jpg",
-  "2026-06-11": "placeholder.jpg",
-  "2026-06-12": "placeholder.jpg",
-  "2026-06-13": "placeholder.jpg",
-  "2026-06-14": "placeholder.jpg",
-  "2026-06-15": "placeholder.jpg",
-  "2026-06-16": "placeholder.jpg",
-  "2026-06-17": "placeholder.jpg",
-  "2026-06-18": "placeholder.jpg",
-  "2026-06-19": "placeholder.jpg",
-  "2026-06-20": "placeholder.jpg",
-  "2026-06-21": "placeholder.jpg",
-  "2026-06-22": "placeholder.jpg",
-  "2026-06-23": "placeholder.jpg",
-  "2026-06-24": "placeholder.jpg",
-  "2026-06-25": "placeholder.jpg",
-  "2026-06-26": "placeholder.jpg",
-  "2026-06-27": "placeholder.jpg",
-  "2026-06-28": "placeholder.jpg",
-  "2026-06-29": "placeholder.jpg",
-  "2026-06-30": "placeholder.jpg",
-  "2026-07-01": "placeholder.jpg",
-  "2026-07-02": "placeholder.jpg",
-  "2026-07-03": "placeholder.jpg",
-  "2026-07-04": "placeholder.jpg",
-  "2026-07-05": "placeholder.jpg",
-  "2026-07-06": "placeholder.jpg",
-  "2026-07-07": "placeholder.jpg",
-  "2026-07-08": "placeholder.jpg",
-  "2026-07-09": "placeholder.jpg",
-  "2026-07-10": "placeholder.jpg",
-  "2026-07-11": "placeholder.jpg",
-  "2026-07-12": "placeholder.jpg",
-  "2026-07-13": "placeholder.jpg",
-  "2026-07-14": "placeholder.jpg",
-  "2026-07-15": "placeholder.jpg",
-  "2026-07-16": "placeholder.jpg",
-  "2026-07-17": "placeholder.jpg",
-  "2026-07-18": "placeholder.jpg",
-  "2026-07-19": "placeholder.jpg",
-  "2026-07-20": "placeholder.jpg",
-  "2026-07-21": "placeholder.jpg",
-  "2026-07-22": "placeholder.jpg",
-  "2026-07-23": "placeholder.jpg",
-  "2026-07-24": "placeholder.jpg",
-  "2026-07-25": "placeholder.jpg",
-  "2026-07-26": "placeholder.jpg",
-  "2026-07-27": "placeholder.jpg",
-  "2026-07-28": "placeholder.jpg",
-  "2026-07-29": "placeholder.jpg",
-  "2026-07-30": "placeholder.jpg",
-  "2026-07-31": "placeholder.jpg",
-  "2026-08-01": "placeholder.jpg",
-  "2026-08-02": "placeholder.jpg",
-  "2026-08-03": "placeholder.jpg",
-  "2026-08-04": "placeholder.jpg",
-  "2026-08-05": "placeholder.jpg",
-  "2026-08-06": "placeholder.jpg",
-  "2026-08-07": "placeholder.jpg",
-  "2026-08-08": "placeholder.jpg",
-  "2026-08-09": "placeholder.jpg",
-  "2026-08-10": "placeholder.jpg",
-  "2026-08-11": "placeholder.jpg",
-  "2026-08-12": "placeholder.jpg",
-  "2026-08-13": "placeholder.jpg",
-  "2026-08-14": "placeholder.jpg",
-  "2026-08-15": "placeholder.jpg",
-  "2026-08-16": "placeholder.jpg",
-  "2026-08-17": "placeholder.jpg",
-  "2026-08-18": "placeholder.jpg"
-};
+const FIRST_ALLOWED = new Date(2025,7,18);
+const LAST_ALLOWED  = new Date(2026,7,18);
+let viewDate = new Date(FIRST_ALLOWED.getFullYear(), FIRST_ALLOWED.getMonth(), 1);
 
-  // Add more here...
-};
+const WEEKDAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const CUTE_WORDS = ["purrfection","fluffball","meowgical","paw-sitive","whisker-twist","knead-love","nap-sultan","whiskerwin"];
 
-/* ========== Calendar range and state ========== */
-const startDate = new Date(2025, 7, 18); // August is month 7 in JS (0-based)
-const endDate = new Date(2026, 7, 18);   // August 18, 2026
-let currentYear = startDate.getFullYear();
-let currentMonth = startDate.getMonth();
+const monthYearEl = document.getElementById('monthYear');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const daysFront = document.getElementById('daysFront');
+const daysBack  = document.getElementById('daysBack');
+const wdaysFront = document.getElementById('wdaysFront');
+const wdaysBack = document.getElementById('wdaysBack');
+const randBtn = document.getElementById('randBtn');
+const randWord = document.getElementById('randWord');
 
-const monthLabel = document.getElementById('month-label');
-const daysGrid = document.getElementById('days-grid');
-const calendarContainer = document.getElementById('calendar');
-
-const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-/* ========== Helper Functions ========== */
-function isDateInRange(date) {
-  return date >= startDate && date <= endDate;
-}
-
-function formatDate(date) {
-  return date.toISOString().slice(0,10);
-}
-
-function getDaysInMonth(year, month) {
-  return new Date(year, month+1, 0).getDate();
-}
-
-/* ========== Build month grid ========== */
-function buildMonthGrid(year, month) {
-  daysGrid.innerHTML = '';
-
-  monthLabel.textContent = new Date(year, month).toLocaleString('en-US', {month: 'long', year: 'numeric'});
-
-  // First day of the month (Sun=0,...)
-  const firstDayOfMonth = new Date(year, month, 1).getDay();
-
-  // Number of days in the month
-  const daysInMonth = getDaysInMonth(year, month);
-
-  // We display 6 rows always (6*7=42) to keep consistent grid and avoid "jumping"
-  // We'll fill empty days with disabled class
-  const totalCells = 42;
-
-  for (let i=0; i<totalCells; i++) {
-    const dayDiv = document.createElement('div');
-    dayDiv.classList.add('day');
-
-    // Calculate the real date for this cell
-    const dayNum = i - firstDayOfMonth + 1;
-
-    if (dayNum < 1 || dayNum > daysInMonth) {
-      dayDiv.classList.add('disabled');
-      dayDiv.textContent = '';
-      daysGrid.appendChild(dayDiv);
-      continue;
-    }
-
-    const dateObj = new Date(year, month, dayNum);
-    const dateStr = formatDate(dateObj);
-
-    if (!isDateInRange(dateObj)) {
-      dayDiv.classList.add('disabled');
-      dayDiv.textContent = '';
-      daysGrid.appendChild(dayDiv);
-      continue;
-    }
-
-    // Day number label
-    const dayNumberLabel = document.createElement('div');
-    dayNumberLabel.className = 'day-number';
-    dayNumberLabel.textContent = dayNum;
-    dayDiv.appendChild(dayNumberLabel);
-
-    // Day image
-    const img = document.createElement('img');
-    img.className = 'day-image';
-    if(dayImages[dateStr]){
-      img.src = dayImages[dateStr];
-      img.alt = 'Image for ' + dateStr;
-    } else {
-      img.src = 'day-placeholder.jpg';
-      img.alt = 'Placeholder image';
-    }
-    dayDiv.appendChild(img);
-
-    // Popup on hover
-    const popup = document.createElement('div');
-    popup.className = 'day-popup';
-
-    const popupImg = document.createElement('img');
-    if(dayImages[dateStr]){
-      popupImg.src = dayImages[dateStr];
-      popupImg.alt = 'Large image for ' + dateStr;
-    } else {
-      popupImg.src = 'day-placeholder.jpg';
-      popupImg.alt = 'Placeholder image';
-    }
-    popup.appendChild(popupImg);
-
-    const popupText = document.createElement('div');
-    popupText.className = 'popup-text';
-    popupText.textContent = 'Us this day last year';
-    popup.appendChild(popupText);
-
-    dayDiv.appendChild(popup);
-
-    daysGrid.appendChild(dayDiv);
+function drawWeekdays(container){
+  container.innerHTML = '';
+  for(let wd of WEEKDAYS){
+    const el = document.createElement('div');
+    el.textContent = wd;
+    container.appendChild(el);
   }
 }
 
-/* ========== Navigation buttons ========== */
-document.getElementById('prev-month').addEventListener('click', () => {
-  calendarContainer.classList.add('flip');
-  setTimeout(() => {
-    if(currentMonth === 0) {
-      currentYear--;
-      currentMonth = 11;
+function buildMonthGrid(forDate, container){
+  container.innerHTML = '';
+  const year = forDate.getFullYear();
+  const month = forDate.getMonth();
+  const first = new Date(year, month, 1);
+  const startWeekday = first.getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+
+  // Empty cells before first day
+  for(let i=0;i<startWeekday;i++){
+    const empty = document.createElement('div');
+    container.appendChild(empty);
+  }
+  for(let d=1; d<=daysInMonth; d++){
+    const dateObj = new Date(year, month, d);
+    const cell = document.createElement('div');
+    cell.className = 'day';
+    cell.dataset.iso = dateObj.toISOString();
+    const num = document.createElement('div');
+    num.className = 'date-num';
+    num.textContent = d;
+    cell.appendChild(num);
+
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.alt = 'photo of the day';
+    img.src = 'day-placeholder.jpg';
+    cell.appendChild(img);
+
+    const ov = document.createElement('div');
+    ov.className = 'overlay';
+    ov.textContent = 'this day last year';
+    cell.appendChild(ov);
+
+    const paw = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    paw.setAttribute('viewBox','0 0 24 24');
+    paw.classList.add('paw');
+    paw.innerHTML = '<path fill="#c86a98" d="M12 18c-4 0-6 2-6 4h12c0-2-2-4-6-4zM6 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM10 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM18 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM16 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>';
+    cell.appendChild(paw);
+
+    if(dateObj < FIRST_ALLOWED || dateObj > LAST_ALLOWED){
+      cell.classList.add('disabled');
     } else {
-      currentMonth--;
+      cell.addEventListener('click', () => {
+        alert('Clicked ' + dateObj.toDateString() + '. Add photo upload here.');
+      });
     }
-    // Don't allow to go before startDate month
-    if(new Date(currentYear, currentMonth +1, 0) < startDate) {
-      currentYear = startDate.getFullYear();
-      currentMonth = startDate.getMonth();
-    }
-    buildMonthGrid(currentYear, currentMonth);
-    calendarContainer.classList.remove('flip');
-  }, 350);
-});
-
-document.getElementById('next-month').addEventListener('click', () => {
-  calendarContainer.classList.add('flip');
-  setTimeout(() => {
-    if(currentMonth === 11) {
-      currentYear++;
-      currentMonth = 0;
-    } else {
-      currentMonth++;
-    }
-    // Don't allow to go after endDate month
-    if(new Date(currentYear, currentMonth, 1) > endDate) {
-      currentYear = endDate.getFullYear();
-      currentMonth = endDate.getMonth();
-    }
-    buildMonthGrid(currentYear, currentMonth);
-    calendarContainer.classList.remove('flip');
-  }, 350);
-});
-
-/* ========== Cute Word Machine ========== */
-const words = [
-  "purrfect", "meowgical", "paw-some", "claw-some", "furrtastic",
-  "cat-tastic", "paw-lease", "whiskerful", "snugglebug", "felinefine"
-];
-
-const cuteBtn = document.getElementById('cute-word-btn');
-const wordOutput = document.getElementById('word-output');
-
-function canShowWord() {
-  const lastShown = localStorage.getItem('lastCuteWordDate');
-  const todayStr = new Date().toISOString().slice(0,10);
-  return lastShown !== todayStr;
+    container.appendChild(cell);
+  }
 }
 
-cuteBtn.addEventListener('click', () => {
-  if (!canShowWord()) {
-    wordOutput.textContent = "You already got your cute word today!";
+function renderInstant(date){
+  monthYearEl.textContent = MONTHS[date.getMonth()] + ' ' + date.getFullYear();
+  drawWeekdays(wdaysFront);
+  drawWeekdays(wdaysBack);
+  buildMonthGrid(date, daysFront);
+  buildMonthGrid(date, daysBack);
+  updateNavButtons();
+}
+
+function updateNavButtons(){
+  const firstMonth = new Date(FIRST_ALLOWED.getFullYear(), FIRST_ALLOWED.getMonth(), 1);
+  const lastMonth  = new Date(LAST_ALLOWED.getFullYear(), LAST_ALLOWED.getMonth(), 1);
+  const viewMonth  = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
+  prevBtn.disabled = (viewMonth.getTime() <= firstMonth.getTime());
+  nextBtn.disabled = (viewMonth.getTime() >= lastMonth.getTime());
+}
+
+prevBtn.addEventListener('click', () => {
+  const prev = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+  if(prev >= new Date(FIRST_ALLOWED.getFullYear(), FIRST_ALLOWED.getMonth(), 1)){
+    viewDate = prev;
+    renderInstant(viewDate);
+  }
+});
+nextBtn.addEventListener('click', () => {
+  const next = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+  if(next <= new Date(LAST_ALLOWED.getFullYear(), LAST_ALLOWED.getMonth(), 1)){
+    viewDate = next;
+    renderInstant(viewDate);
+  }
+});
+
+renderInstant(viewDate);
+
+randBtn.addEventListener('click', ()=>{
+  const todayKey = (new Date()).toDateString();
+  if(localStorage.getItem('cuteWordDate_v1') === todayKey){
+    randWord.textContent = localStorage.getItem('cuteWord_v1') || '—';
+    randBtn.disabled = true;
     return;
   }
-  const word = words[Math.floor(Math.random() * words.length)];
-  wordOutput.textContent = word;
-  const todayStr = new Date().toISOString().slice(0,10);
-  localStorage.setItem('lastCuteWordDate', todayStr);
+  const w = CUTE_WORDS[Math.floor(Math.random()*CUTE_WORDS.length)];
+  localStorage.setItem('cuteWord_v1', w);
+  localStorage.setItem('cuteWordDate_v1', todayKey);
+  randWord.textContent = w;
+  randBtn.disabled = true;
 });
-
-/* ========== Initial build ========== */
-buildMonthGrid(currentYear, currentMonth);
-
+(function initDaily(){
+  const todayKey = (new Date()).toDateString();
+  if(localStorage.getItem('cuteWordDate_v1') === todayKey){
+    randWord.textContent = localStorage.getItem('cuteWord_v1') || '—';
+    randBtn.disabled = true;
+  } else {
+    randWord.textContent = '—';
+    randBtn.disabled = false;
+  }
+})();
 </script>
 </body>
 </html>
